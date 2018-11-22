@@ -444,28 +444,33 @@ def test_grid_search_bad_param_grid():
     clf = SVC(gamma='auto')
     assert_raise_message(
         ValueError,
-        "Parameter values for parameter (C) need to be a sequence"
-        "(but not a string) or np.ndarray.",
+        "Parameter grid for parameter (C) needs to be a sequence"
+        "(but not a string) or np.ndarray. Single value should "
+        "be wrapped in a list with one element.",
         GridSearchCV, clf, param_dict)
 
     param_dict = {"C": []}
     clf = SVC(gamma="scale")
     assert_raise_message(
         ValueError,
-        "Parameter values for parameter (C) need to be a non-empty sequence.",
+        "Parameter grid for parameter (C) needs to be a non-empty sequence.",
         GridSearchCV, clf, param_dict)
 
     param_dict = {"C": "1,2,3"}
     clf = SVC(gamma='auto')
     assert_raise_message(
         ValueError,
-        "Parameter values for parameter (C) need to be a sequence"
-        "(but not a string) or np.ndarray.",
+        "Parameter grid for parameter (C) needs to be a sequence"
+        "(but not a string) or np.ndarray. Single value should "
+        "be wrapped in a list with one element.",
         GridSearchCV, clf, param_dict)
 
     param_dict = {"C": np.ones((3, 2))}
     clf = SVC(gamma="scale")
-    assert_raises(ValueError, GridSearchCV, clf, param_dict)
+    assert_raise_message(
+        ValueError,
+        "Parameter grid for parameter (C) needs to be one-dimensional",
+        GridSearchCV, clf, param_dict)
 
 
 @pytest.mark.filterwarnings('ignore: The default of the `iid`')  # 0.22
